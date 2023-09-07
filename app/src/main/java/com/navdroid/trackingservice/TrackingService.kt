@@ -13,7 +13,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationServices
 import com.navdroid.trackingservice.db.AppDatabase
 import com.navdroid.trackingservice.db.DeviceLocationModel
 // import com.readystatesoftware.chuck.internal.ui.MainActivity
@@ -44,6 +43,8 @@ class TrackingService : Service(), IGPSActivity {
 
     override fun onCreate() {
         super.onCreate()
+
+
         firstEntryExcluded = false
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -86,6 +87,8 @@ class TrackingService : Service(), IGPSActivity {
     override fun onDestroy() {
         super.onDestroy()
         gps?.stopGPS()
+
+
         stopForeground(true)
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -159,7 +162,6 @@ class TrackingService : Service(), IGPSActivity {
                 ).format(Timestamp(System.currentTimeMillis()))
             val dates = date.split(" ")
 
-
             val appDatabase = MyApplicationClass.INSTANCE?.let { AppDatabase.getInstance(it) }!!
 
             val locationModel = DeviceLocationModel(
@@ -171,15 +173,13 @@ class TrackingService : Service(), IGPSActivity {
                 dates[0],
                 dates[1] + " " + dates[2],
                 appDatabase.locationDao().getLatestStartEntry(),
-                location.speed, // raw data
-                // ((location.speed * 3600) / 1000).toInt(), //in km/h
+                location.speed, // raw data // ((location.speed * 3600) / 1000).toInt(), //in km/h
                 location.accuracy,
             )
 
 //          Toast.makeText(this, "Location Inserted", Toast.LENGTH_SHORT).show()
             Log.e("LocationInserted", "checkForLocation: $locationModel")
             appDatabase.locationDao().insert(deviceLocationModel = locationModel)
-
 
             val latitude = location.latitude
             val longitude = location.longitude
@@ -198,5 +198,4 @@ class TrackingService : Service(), IGPSActivity {
             firstEntryExcluded = true
         }
     }
-
 }
