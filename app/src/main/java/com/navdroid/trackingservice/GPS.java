@@ -30,19 +30,20 @@ public class GPS {
         mlocManager = (LocationManager) ((Activity) this.main).getSystemService(Context.LOCATION_SERVICE);
         mlocListener = new MyLocationListener();
         try{
-            mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 4, mlocListener);
+            mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 4000, 4, mlocListener);
         }catch (Exception e){
             e.printStackTrace();
         }
         try{
-            mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 4, mlocListener);
+            mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 4000, 4, mlocListener);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    @SuppressLint("MissingPermission")
     public GPS(IGPSActivity main, Boolean isFromService) {
+        Log.e("mylocation","location enabled from service");
+
         this.main = main;
         this.isFromService = isFromService;
 
@@ -59,18 +60,6 @@ public class GPS {
         mlocManager = (LocationManager) ((Service) this.main).getSystemService(Context.LOCATION_SERVICE);
         mlocListener = new MyLocationListener();
         //mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MINIMUM_TIME, MINIMUM_RADIUS, mlocListener);
-
-        try{
-            mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 4, mlocListener);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        try{
-            mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 4, mlocListener);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MINIMUM_TIME, MINIMUM_RADIUS, mlocListener);
         mlocManager.requestLocationUpdates(MINIMUM_TIME, MINIMUM_RADIUS, criteria, mlocListener, null);
 
@@ -80,24 +69,33 @@ public class GPS {
         mlocManager.removeUpdates(mlocListener);
     }
 
-    @SuppressLint("MissingPermission")
     public Location getLastLocation(String value) {
         return mlocManager.getLastKnownLocation(value);
     }
 
+    public void resumeGPS() {
+        if (isFromService) {
+            mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 5, mlocListener);
+            mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 5, mlocListener);
+        } else {
+            mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mlocListener);
+            mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
+        }
+    }
 
     public class MyLocationListener implements LocationListener {
 
         @Override
         public void onLocationChanged(Location loc) {
+//            GPS.this.main.locationChanged(loc.getLongitude(), loc.getLatitude());
             Log.e("mylocation","i got location");
             GPS.this.main.locationChanged(loc);
         }
 
         @Override
         public void onProviderDisabled(String provider) {
-            Log.e("mylocation","provider disable "+provider);
-
+//GPS.this.main.displayGPSSettingsDialog();
+            Log.e("mylocation","provider disable");
 
         }
 
