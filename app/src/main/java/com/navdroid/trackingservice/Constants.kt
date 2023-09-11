@@ -7,6 +7,6 @@ package com.navdroid.trackingservice
  * @Company: Aksa SDS
  * @Created 9/7/2023 at 12:37 PM
  */
-object Constants{
+object Constants {
     const val abc = ""
 }

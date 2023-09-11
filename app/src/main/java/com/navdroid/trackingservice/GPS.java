@@ -96,7 +96,8 @@ public class GPS {
 
         @Override
         public void onProviderDisabled(String provider) {
-            Log.e("mylocation","provider disable");
+            Log.e("mylocation","provider disable "+provider);
+
 
         }
 

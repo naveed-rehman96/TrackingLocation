@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         val appDatabase = MyApplicationClass.INSTANCE?.let { AppDatabase.getInstance(it) }!!
 
         binding.btnStartService.setOnClickListener {
-            val intent = Intent(this, TrackingService::class.java)
+            val intent = Intent(this, TrackingServiceMine::class.java)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startForegroundService(intent)
             } else {

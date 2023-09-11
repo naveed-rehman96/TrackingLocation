@@ -44,7 +44,6 @@ class TrackingService : Service(), IGPSActivity {
     override fun onCreate() {
         super.onCreate()
 
-
         firstEntryExcluded = false
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -87,7 +86,6 @@ class TrackingService : Service(), IGPSActivity {
     override fun onDestroy() {
         super.onDestroy()
         gps?.stopGPS()
-
 
         stopForeground(true)
         val notificationManager =
